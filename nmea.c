@@ -2,9 +2,9 @@
 
 uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char in) {
     switch (gpgga->gpggaState) {
-        case NONE:
+        case GPGGA_NONE:
             break;
-        case UTC:
+        case GPGGA_UTC:
             switch (gpgga->stateCpt) {
                 case 0:
                     gpgga->utcTime.hh = (in - 48) * 10;
@@ -33,14 +33,14 @@ uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char in) {
                     if (in != ',') {
                         return 1;
                     } else {
-                        gpgga->gpggaState = LAT;
+                        gpgga->gpggaState = GPGGA_LAT;
                         gpgga->stateCpt = 0;
                         return 0;
                     }
             }
             gpgga->stateCpt++;
             break;
-        case LAT:
+        case GPGGA_LAT:
             if (in != ',') {
                 if (in != '.') {
                     gpgga->gps.latitude *= 10;
@@ -48,17 +48,17 @@ uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char in) {
                 }
             } else {
                 gpgga->gps.latitude /= 1e4f;
-                gpgga->gpggaState = NOS;
+                gpgga->gpggaState = GPGGA_NOS;
             }
             break;
-        case NOS:
+        case GPGGA_NOS:
             if (in != ',') {
-                gpgga->gps.NS = in == N ? N : S;
+                gpgga->gps.NS = in == GPS_N ? GPS_N : GPS_S;
             } else {
-                gpgga->gpggaState = LON;
+                gpgga->gpggaState = GPGGA_LON;
             }
             break;
-        case LON:
+        case GPGGA_LON:
             if (in != ',') {
                 if (in != '.') {
                     gpgga->gps.longitude *= 10;
@@ -66,43 +66,43 @@ uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char in) {
                 }
             } else {
                 gpgga->gps.longitude /= 1e4f;
-                gpgga->gpggaState = EOW;
+                gpgga->gpggaState = GPGGA_EOW;
             }
             break;
-        case EOW:
+        case GPGGA_EOW:
             if (in != ',') {
-                gpgga->gps.EW = in == E ? E : W;
+                gpgga->gps.EW = in == GPS_E ? GPS_E : GPS_W;
             } else {
-                gpgga->gpggaState = QUALITY_ID;
+                gpgga->gpggaState = GPGGA_QUALITY_ID;
             }
             break;
-        case QUALITY_ID:
+        case GPGGA_QUALITY_ID:
             if (in != ',') {
                 gpgga->quality = (GPS_QUALITY_INDICATOR) in;
             } else {
-                gpgga->gpggaState = NUM_SAT;
+                gpgga->gpggaState = GPGGA_NUM_SAT;
             }
             break;
-        case NUM_SAT:
+        case GPGGA_NUM_SAT:
             if (in != ',') {
                 gpgga->numSatView *= 10;
                 gpgga->numSatView += (in - 48);
             } else {
-                gpgga->gpggaState = HOR_DOP;
+                gpgga->gpggaState = GPGGA_HOR_DOP;
             }
             break;
-        case HOR_DOP:
+        case GPGGA_HOR_DOP:
             if (in != ',') {
                 if (in != '.') {
                     gpgga->hdop *= 10;
                     gpgga->hdop += (in - 48);
                 }
             } else {
-                gpgga->gpggaState = ALT;
+                gpgga->gpggaState = GPGGA_ALT;
                 gpgga->hdop /= 10.f;
             }
             break;
-        case ALT:
+        case GPGGA_ALT:
             if (in != ',') {
                 if (in != '.' && in != 'M') {
                     gpgga->altitudeMSL *= 10;
@@ -111,12 +111,12 @@ uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char in) {
             } else if (gpgga->stateCpt != 1) {
                 gpgga->stateCpt++;
             } else {
-                gpgga->gpggaState = HEIGHT_WGS;
+                gpgga->gpggaState = GPGGA_HEIGHT_WGS;
                 gpgga->altitudeMSL /= 100.f;
                 gpgga->stateCpt = 0;
             }
             break;
-        case HEIGHT_WGS:
+        case GPGGA_HEIGHT_WGS:
             if (in != ',') {
                 if (in != '.' && in != 'M') {
                     gpgga->heightAboveWGS *= 10;
@@ -125,34 +125,34 @@ uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char in) {
             } else if (gpgga->stateCpt != 1) {
                 gpgga->stateCpt++;
             } else {
-                gpgga->gpggaState = TIME_SIMCE_LAST_UPDATE;
+                gpgga->gpggaState = GPGGA_TIME_SIMCE_LAST_UPDATE;
                 gpgga->heightAboveWGS /= 100.f;
                 gpgga->stateCpt = 0;
             }
             break;
-        case TIME_SIMCE_LAST_UPDATE:
+        case GPGGA_TIME_SIMCE_LAST_UPDATE:
             if (in != ',') {
                 gpgga->timeSinceLastDGPS *= 10;
                 gpgga->timeSinceLastDGPS += (in - 48);
             } else {
-                gpgga->gpggaState = DGPS;
+                gpgga->gpggaState = GPGGA_DGPS;
             }
             break;
-        case DGPS:
+        case GPGGA_DGPS:
             if (in != '*') {
                 gpgga->DGPSRefID[gpgga->stateCpt] = in;
                 gpgga->stateCpt++;
             } else {
-                gpgga->gpggaState = CHECKSUM;
+                gpgga->gpggaState = GPGGA_CHECKSUM;
                 gpgga->stateCpt = 0;
             }
             break;
-        case CHECKSUM:
+        case GPGGA_CHECKSUM:
             gpgga->checksum *= 10;
             gpgga->checksum += (in - 48);
             gpgga->stateCpt++;
             if (gpgga->stateCpt == 2) {
-                gpgga->gpggaState = NONE;
+                gpgga->gpggaState = GPGGA_NONE;
                 gpgga->stateCpt = 0;
             }
             break;

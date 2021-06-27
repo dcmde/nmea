@@ -18,13 +18,13 @@ typedef enum {
 } NMEA_MSG;
 
 typedef enum {
-    N = 'N',
-    S = 'S'
+    GPS_N = 'N',
+    GPS_S = 'S'
 } GPS_NS;
 
 typedef enum {
-    E = 'E',
-    W = 'W'
+    GPS_E = 'E',
+    GPS_W = 'W'
 } GPS_EW;
 
 typedef struct {
@@ -45,20 +45,20 @@ typedef struct {
 } gps_t;
 
 typedef enum {
-    NONE,
-    UTC,
-    LAT,
-    NOS,
-    LON,
-    EOW,
-    QUALITY_ID,
-    NUM_SAT,
-    HOR_DOP,
-    ALT,
-    HEIGHT_WGS,
-    TIME_SIMCE_LAST_UPDATE,
-    DGPS,
-    CHECKSUM
+    GPGGA_NONE,
+    GPGGA_UTC,
+    GPGGA_LAT,
+    GPGGA_NOS,
+    GPGGA_LON,
+    GPGGA_EOW,
+    GPGGA_QUALITY_ID,
+    GPGGA_NUM_SAT,
+    GPGGA_HOR_DOP,
+    GPGGA_ALT,
+    GPGGA_HEIGHT_WGS,
+    GPGGA_TIME_SIMCE_LAST_UPDATE,
+    GPGGA_DGPS,
+    GPGGA_CHECKSUM
 } GPGGA_STATE;
 
 typedef enum {
@@ -68,7 +68,7 @@ typedef enum {
 } GPS_QUALITY_INDICATOR;
 
 /**
- * http://aprs.gids.nl/nmea/#gga
+ * @brief Struct for GPGGA messages http://aprs.gids.nl/nmea/#gga
  */
 typedef struct {
     utc_time_t utcTime;
@@ -88,6 +88,12 @@ typedef struct {
 
 //void nmea_decode(nmea_t *nmea, char in);
 
+/**
+ * @brief Decode the GPGGA message.
+ * @param gpgga The struct for GPGGA message
+ * @param in Each char defined in the message.
+ * @return 0 if their is no issue 1 otherwise.
+ */
 uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char in);
 
 #ifdef __cplusplus

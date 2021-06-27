@@ -4,7 +4,7 @@
 int main() {
     gpgga_t gpgga{};
 
-    gpgga.gpggaState = UTC;
+    gpgga.gpggaState = GPGGA_UTC;
 
     char msg[] = "134658.00,5106.9792,N,11402.3003,W,2,09,1.0,1048.47,M,16.27,M,08,AAAA*60";
 
