@@ -1,0 +1,97 @@
+#ifndef NMEA_NMEA_H
+#define NMEA_NMEA_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "stdint.h"
+
+typedef enum {
+    GPGGA,
+    GPGLL,
+    GPGSA,
+    GPGSV,
+    GPHDT,
+    GPVTG,
+    GPZDA
+} NMEA_MSG;
+
+typedef enum {
+    N = 'N',
+    S = 'S'
+} GPS_NS;
+
+typedef enum {
+    E = 'E',
+    W = 'W'
+} GPS_EW;
+
+typedef struct {
+    NMEA_MSG nmeaMsg;
+} nmea_t;
+
+typedef struct {
+    uint8_t hh;
+    uint8_t mm;
+    uint8_t ss;
+} utc_time_t;
+
+typedef struct {
+    double latitude;
+    GPS_NS NS;
+    double longitude;
+    GPS_NS EW;
+} gps_t;
+
+typedef enum {
+    NONE,
+    UTC,
+    LAT,
+    NOS,
+    LON,
+    EOW,
+    QUALITY_ID,
+    NUM_SAT,
+    HOR_DOP,
+    ALT,
+    HEIGHT_WGS,
+    TIME_SIMCE_LAST_UPDATE,
+    DGPS,
+    CHECKSUM
+} GPGGA_STATE;
+
+typedef enum {
+    NO_FIX = '0',
+    GPS_FIX = '1',
+    DIF_GPS_FIX = '2'
+} GPS_QUALITY_INDICATOR;
+
+/**
+ * http://aprs.gids.nl/nmea/#gga
+ */
+typedef struct {
+    utc_time_t utcTime;
+    gps_t gps;
+    GPGGA_STATE gpggaState;
+    uint8_t stateCpt;
+    GPS_QUALITY_INDICATOR quality;
+    uint8_t numSatView;
+    double hdop;
+    uint8_t hdop_f;
+    double altitudeMSL;
+    double heightAboveWGS;
+    uint8_t timeSinceLastDGPS;
+    char DGPSRefID[4];
+    uint8_t checksum;
+} gpgga_t;
+
+//void nmea_decode(nmea_t *nmea, char in);
+
+uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char in);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif //NMEA_NMEA_H
