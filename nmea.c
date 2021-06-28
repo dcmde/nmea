@@ -166,3 +166,21 @@ uint8_t nmea_decode_gpggl(gpggl_t *gpggl, char buffer[], uint8_t size) {
     gpggl->gpsDataStatus = (GPS_DATA_STATUS) buffer[index[5] + 1];
     return 0;
 }
+
+/**
+ * @brief
+ * @param gpvtg
+ * @param buffer
+ * @param size
+ * @return
+ */
+uint8_t nmea_decode_gpvtg(gpvtg_t *gpvtg, char buffer[], uint8_t size) {
+    uint8_t index[7] = {0};
+    split_index(buffer, size, index, 7);
+    gpvtg->trackDegreeTrue = strtod(&buffer[index[0] + 1], NULL);
+    gpvtg->trackDegreeMagnetic = strtod(&buffer[index[2] + 1], NULL);
+    gpvtg->gndSpeedN = strtod(&buffer[index[4] + 1], NULL);
+    gpvtg->gndSpeedK = strtod(&buffer[index[6] + 1], NULL);
+    return 0;
+}
+

@@ -80,6 +80,16 @@ typedef struct {
     GPS_DATA_STATUS gpsDataStatus;
 } gpggl_t;
 
+/**
+ * @brief Struct for GPVTG messages http://aprs.gids.nl/nmea/#trf
+ */
+typedef struct {
+    double trackDegreeTrue;
+    double trackDegreeMagnetic;
+    double gndSpeedN;
+    double gndSpeedK;
+} gpvtg_t;
+
 void nmea_handle_msg(char in);
 
 uint8_t nmea_get_buffer(char *buffer, uint8_t size);
@@ -87,6 +97,8 @@ uint8_t nmea_get_buffer(char *buffer, uint8_t size);
 uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char buffer[], uint8_t size);
 
 uint8_t nmea_decode_gpggl(gpggl_t *gpggl, char buffer[], uint8_t size);
+
+uint8_t nmea_decode_gpvtg(gpvtg_t *gpvtg, char buffer[], uint8_t size);
 
 #ifdef __cplusplus
 }
