@@ -1,5 +1,3 @@
-#include <string.h>
-#include <stdio.h>
 #include "nmea.h"
 
 volatile static uint8_t nmea_mutex = 1; // mutex is free by default.
