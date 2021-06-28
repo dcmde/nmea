@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "nmea.h"
 
 volatile static uint8_t nmea_mutex = 1; // mutex is free by default.
@@ -54,7 +55,7 @@ uint8_t nmea_get_buffer(char *buffer, uint8_t size) {
     if (!nmea_buffer_lock()) { // If the mutex is free.
         min_size = nmea_buffer_size < size ? nmea_buffer_size : size; // Get the size of the smallest buffer.
         for (uint8_t i = 0; i < min_size; ++i) { // Copy the buffer.
-            nmea_buffer_array[i] = nmea_buffer_in_array[i];
+            buffer[i] = nmea_buffer_array[i];
         }
         nmea_buffer_free(); // Free the mutex.
     }
@@ -109,8 +110,33 @@ void split_index(const char *buffer, uint8_t msgSize, uint8_t *index, uint8_t in
     }
 }
 
-uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char msg[], uint8_t msgSize) {
-
+/**
+ * @brief
+ * @param gpgga
+ * @param buffer
+ * @param size
+ * @return
+ */
+uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char buffer[], uint8_t size) {
+    uint8_t index[14] = {0};
+    split_index(buffer, size, index, 14); // GPGGA contains 14 comma.
+    gpgga->utcTime.hh = (buffer[index[0] + 1] - 48) * 10 + (buffer[index[0] + 2] - 48);
+    gpgga->utcTime.mm = (buffer[index[0] + 3] - 48) * 10 + (buffer[index[0] + 4] - 48);
+    gpgga->utcTime.ss = (buffer[index[0] + 5] - 48) * 10 + (buffer[index[0] + 6] - 48);
+    gpgga->gps.latitude = strtod(&buffer[index[1] + 1], NULL);
+    gpgga->gps.NS = (GPS_NS) buffer[index[2] + 1];
+    gpgga->gps.longitude = strtod(&buffer[index[3] + 1], NULL);
+    gpgga->gps.EW = (GPS_EW) buffer[index[4] + 1];
+    gpgga->quality = (GPS_QUALITY_INDICATOR) buffer[index[5] + 1];
+    gpgga->numSatView = (buffer[index[6] + 1] - 48) * 10 + (buffer[index[6] + 2] - 48);
+    gpgga->hdop = strtod(&buffer[index[7] + 1], NULL);
+    gpgga->altitudeMSL = strtod(&buffer[index[8] + 1], NULL);
+    gpgga->heightAboveWGS = strtod(&buffer[index[10] + 1], NULL);
+    gpgga->timeSinceLastDGPS = (buffer[index[12] + 1] - 48) * 10 + (buffer[index[12] + 2] - 48);
+    gpgga->DGPSRefID[0] = buffer[index[13] + 1];
+    gpgga->DGPSRefID[1] = buffer[index[13] + 2];
+    gpgga->DGPSRefID[2] = buffer[index[13] + 3];
+    gpgga->DGPSRefID[3] = buffer[index[13] + 4];
     return 0;
 }
 

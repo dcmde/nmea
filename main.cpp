@@ -10,6 +10,25 @@ int main() {
     }
 
     std::cout << (int) nmea_get_buffer(in, 85) << std::endl;
+    std::cout << in << std::endl;
+
+    gpgga_t gpgga = {0};
+    nmea_decode_gpgga(&gpgga, in, 79);
+
+    std::cout << (int) gpgga.utcTime.hh << std::endl;
+    std::cout << (int) gpgga.utcTime.mm << std::endl;
+    std::cout << (int) gpgga.utcTime.ss << std::endl;
+    std::cout << gpgga.gps.latitude << std::endl;
+    std::cout << (char) gpgga.gps.NS << std::endl;
+    std::cout << gpgga.gps.longitude << std::endl;
+    std::cout << (char) gpgga.gps.EW << std::endl;
+    std::cout << gpgga.quality - 48 << std::endl;
+    std::cout << (int) gpgga.numSatView << std::endl;
+    std::cout << gpgga.hdop << std::endl;
+    std::cout << gpgga.altitudeMSL << std::endl;
+    std::cout << gpgga.heightAboveWGS << std::endl;
+    std::cout << (int) gpgga.timeSinceLastDGPS << std::endl;
+    std::cout << gpgga.DGPSRefID << std::endl;
 
     return 0;
 }

@@ -41,25 +41,8 @@ typedef struct {
     double latitude;
     GPS_NS NS;
     double longitude;
-    GPS_NS EW;
+    GPS_EW EW;
 } gps_t;
-
-typedef enum {
-    GPGGA_NONE,
-    GPGGA_UTC,
-    GPGGA_LAT,
-    GPGGA_NOS,
-    GPGGA_LON,
-    GPGGA_EOW,
-    GPGGA_QUALITY_ID,
-    GPGGA_NUM_SAT,
-    GPGGA_HOR_DOP,
-    GPGGA_ALT,
-    GPGGA_HEIGHT_WGS,
-    GPGGA_TIME_SIMCE_LAST_UPDATE,
-    GPGGA_DGPS,
-    GPGGA_CHECKSUM
-} GPGGA_STATE;
 
 typedef enum {
     NO_FIX = '0',
@@ -73,12 +56,9 @@ typedef enum {
 typedef struct {
     utc_time_t utcTime;
     gps_t gps;
-    GPGGA_STATE gpggaState;
-    uint8_t stateCpt;
     GPS_QUALITY_INDICATOR quality;
     uint8_t numSatView;
     double hdop;
-    uint8_t hdop_f;
     double altitudeMSL;
     double heightAboveWGS;
     uint8_t timeSinceLastDGPS;
@@ -96,7 +76,7 @@ uint8_t nmea_buffer_free();
 
 void split_index(const char *buffer, uint8_t msgSize, uint8_t *index, uint8_t indexSize);
 
-uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char msg[], uint8_t msgSize);
+uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char buffer[], uint8_t size);
 
 #ifdef __cplusplus
 }
