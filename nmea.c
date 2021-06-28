@@ -6,6 +6,10 @@ volatile static char nmea_buffer_in_array[90] = {0};
 volatile static char nmea_buffer_array[90] = {0};
 volatile static int8_t nmea_buffer_counter = -1, nmea_buffer_size = 0, nmea_buffer_ready = 0;
 
+uint8_t nmea_buffer_free();
+
+uint8_t nmea_buffer_lock();
+
 void nmea_handle_msg(char in) {
     // Main state machine to handle incoming char.
     switch (in) {
@@ -63,8 +67,8 @@ uint8_t nmea_get_buffer(char *buffer, uint8_t size) {
 }
 
 /**
- * @brief Lock a mutex to access the buffer containing the nmea message.
- * @return 0 is success, 1 if failed.
+    * @brief Lock a mutex to access the buffer containing the nmea message.
+    * @return 0 is success, 1 if failed.
  */
 uint8_t nmea_buffer_lock() {
     if (nmea_mutex) {

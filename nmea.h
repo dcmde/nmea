@@ -70,10 +70,6 @@ void nmea_handle_msg(char in);
 
 uint8_t nmea_get_buffer(char *buffer, uint8_t size);
 
-uint8_t nmea_buffer_lock();
-
-uint8_t nmea_buffer_free();
-
 void split_index(const char *buffer, uint8_t msgSize, uint8_t *index, uint8_t indexSize);
 
 uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char buffer[], uint8_t size);
