@@ -86,15 +86,17 @@ typedef struct {
     uint8_t checksum;
 } gpgga_t;
 
-//void nmea_decode(nmea_t *nmea, char in);
+void nmea_handle_msg(char in);
 
-/**
- * @brief Decode the GPGGA message.
- * @param gpgga The struct for GPGGA message
- * @param in Each char defined in the message.
- * @return 0 if their is no issue 1 otherwise.
- */
-uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char in);
+uint8_t nmea_get_buffer(char *buffer, uint8_t size);
+
+uint8_t nmea_buffer_lock();
+
+uint8_t nmea_buffer_free();
+
+void splitIndex(const char buffer[], uint8_t msgSize, uint8_t index[], uint8_t indexSize);
+
+uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char msg[], uint8_t msgSize);
 
 #ifdef __cplusplus
 }
