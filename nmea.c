@@ -144,3 +144,23 @@ uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char buffer[], uint8_t size) {
     return 0;
 }
 
+/**
+ * @brief
+ * @param gpggl
+ * @param buffer
+ * @param size
+ * @return
+ */
+uint8_t nmea_decode_gpggl(gpggl_t *gpggl, char buffer[], uint8_t size) {
+    uint8_t index[7] = {0};
+    split_index(buffer, size, index, 7);
+    gpggl->gps.latitude = strtod(&buffer[index[0] + 1], NULL);
+    gpggl->gps.NS = (GPS_NS) buffer[index[1] + 1];
+    gpggl->gps.longitude = strtod(&buffer[index[2] + 1], NULL);
+    gpggl->gps.EW = (GPS_EW) buffer[index[3] + 1];
+    gpggl->utcTime.hh = (buffer[index[4] + 1] - 48) * 10 + (buffer[index[4] + 2] - 48);
+    gpggl->utcTime.mm = (buffer[index[4] + 3] - 48) * 10 + (buffer[index[4] + 4] - 48);
+    gpggl->utcTime.ss = (buffer[index[4] + 5] - 48) * 10 + (buffer[index[4] + 6] - 48);
+    gpggl->gpsDataStatus = (GPS_DATA_STATUS) buffer[index[5] + 1];
+    return 0;
+}
