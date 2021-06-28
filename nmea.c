@@ -94,7 +94,7 @@ uint8_t nmea_buffer_free() {
  * @param index
  * @param indexSize
  */
-void splitIndex(const char buffer[], uint8_t msgSize, uint8_t index[], uint8_t indexSize) {
+void split_index(const char *buffer, uint8_t msgSize, uint8_t *index, uint8_t indexSize) {
     uint8_t indexCpt = 0;
     for (uint8_t i = 0; i < msgSize; ++i) {
         if (buffer[i] != ',') {
