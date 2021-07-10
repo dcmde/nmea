@@ -4,7 +4,7 @@ project(nmea)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_C_STANDARD 99)
 
-include_directories(.)
+include_directories(include)
 
 set(USER_SRC
         main.cpp
