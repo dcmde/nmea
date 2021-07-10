@@ -90,10 +90,6 @@ typedef struct {
     double gndSpeedK;
 } gpvtg_t;
 
-void nmea_handle_msg(char in);
-
-uint8_t nmea_get_buffer(char *buffer, uint8_t size);
-
 uint8_t nmea_decode_gpgga(gpgga_t *gpgga, char buffer[], uint8_t size);
 
 uint8_t nmea_decode_gpggl(gpggl_t *gpggl, char buffer[], uint8_t size);

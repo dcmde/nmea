@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include "nmea.h"
 
 int main() {
@@ -6,20 +7,19 @@ int main() {
 //    char msg[] = "$GPGGA,142056.00,,,,,0,00,99.99,,,,,,*62\n";
 //    char msg[] = "$GPGLL,5107.0013414,N,11402.3279144,W,205412.00,A,A*73\n";
 //    char msg[] = "$GPGLL,,,,,142036.00,V,N*48\n";
+//    char msg[] = "$GPVTG,,T,,M,0.016,N,0.029,K,A*2F\n";
     char msg[] = "$GPVTG,,T,,M,0.016,N,0.029,K,A*2F\n";
 
-    char in[80];
-
-    for (auto it : msg) {
-        char in[80] = {0};
-        nmea_handle_msg(it);
-    }
-    int temp = nmea_get_buffer(in, 85);
-    std::cout << temp << std::endl;
-    std::cout << in << std::endl;
+//    for (auto it : msg) {
+//        char in[80] = {0};
+//        nmea_handle_msg(it);
+//    }
+//    int temp = nmea_get_buffer(in, 85);
+//    std::cout << temp << std::endl;
+//    std::cout << in << std::endl;
 
     gpvtg_t gpvtg = {0};
-    nmea_decode_gpvtg(&gpvtg, in, temp);
+    nmea_decode_gpvtg(&gpvtg, msg, strlen(msg));
     std::cout << gpvtg.trackDegreeTrue << std::endl;
     std::cout << gpvtg.trackDegreeMagnetic << std::endl;
     std::cout << gpvtg.gndSpeedN << std::endl;
