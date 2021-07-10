@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstring>
-#include "nmea.h"
+#include "include/nmea.h"
 
 int main() {
 //    char msg[] = ".27,M,08,AAAA*60\n$GPGGA,134658.00,5106.9792,N,11402.3003,W,2,09,1.0,1048.47,M,-16.27,M,08,AAAA*60\n$GPGGA,134658.00,5106.97";

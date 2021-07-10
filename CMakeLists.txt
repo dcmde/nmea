@@ -8,6 +8,6 @@ include_directories(.)
 
 set(USER_SRC
         main.cpp
-        nmea.c)
+        src/nmea.c)
 
 add_executable(nmea ${USER_SRC})

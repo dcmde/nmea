@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "nmea.h"
+#include "include/nmea.h"
 
 /**
  * @brief Allows to get the index of the ',' separator in the buffer.
